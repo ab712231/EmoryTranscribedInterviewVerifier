@@ -1,0 +1,169 @@
+.auth {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: var(--s5);
+  position: relative;
+  isolation: isolate;
+  background-color: #0f1620;
+  background-image: url("/emory-university-hospital.jpg");
+  background-size: cover;
+  background-position: 50% 62%;
+}
+
+.auth::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to bottom, rgba(9, 14, 20, 0.28) 0%, rgba(9, 14, 20, 0.52) 62%, rgba(9, 14, 20, 0.78) 100%),
+    linear-gradient(to right, rgba(9, 14, 20, 0.34), rgba(9, 14, 20, 0));
+}
+
+.auth__main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s5) 0;
+}
+
+.auth__card {
+  width: 100%;
+  max-width: 27rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--lift);
+  padding: var(--s6);
+}
+
+.auth__title {
+  font-size: var(--size-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.018em;
+  margin-bottom: var(--s3);
+  text-wrap: balance;
+}
+
+.auth__lede {
+  color: var(--ink-2);
+  margin-bottom: var(--s5);
+}
+
+.auth__form > * + * {
+  margin-top: var(--s4);
+}
+
+.auth__footer {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: var(--size-sm);
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+.auth__footer a {
+  color: #ffffff;
+}
+
+@media (max-width: 30rem) {
+  .auth {
+    padding: var(--s3);
+  }
+  .auth__card {
+    padding: var(--s5);
+  }
+  .auth__title {
+    font-size: var(--size-xl);
+  }
+}
+
+.app {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.app__bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.app__barInner {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--s4) var(--s5);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s4);
+  flex-wrap: wrap;
+}
+
+.app__institution {
+  font-size: var(--size-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.app__participant {
+  font-size: var(--size-xs);
+  color: var(--ink-3);
+}
+
+.app__main {
+  max-width: 60rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--s6) var(--s5) var(--s8);
+}
+
+.app__foot {
+  max-width: 60rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--s5);
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: var(--size-sm);
+}
+
+.page__step {
+  font-size: var(--size-sm);
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-bottom: var(--s2);
+}
+
+.page__title {
+  font-size: var(--size-xl);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.014em;
+  text-wrap: balance;
+  margin-bottom: var(--s3);
+}
+
+.page__lede {
+  color: var(--ink-2);
+  max-width: var(--measure);
+  margin-bottom: var(--s6);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--s6);
+}
+
+@media (max-width: 40rem) {
+  .app__main {
+    padding: var(--s5) var(--s4) var(--s7);
+  }
+  .panel {
+    padding: var(--s5) var(--s4);
+  }
+}
+
+.app__footLinks {
+  margin-top: var(--s2);
+}

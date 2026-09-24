@@ -1,0 +1,10 @@
+# Everything the portal needs on the machine you deploy and run scripts from.
+#   python -m pip install -r requirements.txt
+
+# AWS SDK, used by the lambdas and by every script in scripts/.
+boto3>=1.34
+
+# Infrastructure definitions in infra/. The CDK command line itself is a
+# separate Node package and is run with npx, so Node is still required.
+aws-cdk-lib==2.267.0
+constructs>=10.3.0,<11.0.0

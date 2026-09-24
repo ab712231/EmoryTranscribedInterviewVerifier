@@ -1,0 +1,321 @@
+.statements {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--s4);
+}
+
+.statement {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: var(--s5);
+}
+
+.statement[data-answered="true"] {
+  border-color: var(--line);
+  background: #fcfdfd;
+}
+
+.statement__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s4);
+  margin-bottom: var(--s3);
+}
+
+.statement__index {
+  font-size: var(--size-sm);
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.statement__marker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--size-xs);
+  font-weight: 600;
+  padding: var(--s1) var(--s2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  color: var(--ink-3);
+  background: var(--ground);
+  white-space: nowrap;
+}
+
+.statement__marker--correct {
+  color: var(--ok);
+  background: var(--ok-tint);
+  border-color: var(--ok-line);
+}
+.statement__marker--incorrect {
+  color: var(--flag);
+  background: var(--flag-tint);
+  border-color: var(--flag-line);
+}
+.statement__marker--unsure {
+  color: var(--unsure);
+  background: var(--unsure-tint);
+  border-color: var(--unsure-line);
+}
+
+.statement__text {
+  font-size: var(--size-lg);
+  line-height: var(--leading-prose);
+  max-width: var(--measure);
+  margin-bottom: var(--s5);
+}
+
+.choices {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.choices__legend {
+  font-size: var(--size-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: var(--s3);
+  padding: 0;
+}
+
+.choices__options {
+  display: grid;
+  gap: var(--s2);
+}
+
+@media (min-width: 46rem) {
+  .choices__options {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  min-height: var(--control-min);
+  padding: var(--s2) var(--s3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: var(--size-md);
+  transition: border-color 120ms linear, background-color 120ms linear;
+}
+
+.choice:hover {
+  border-color: var(--ink-3);
+  background: var(--ground);
+}
+
+.choice__input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.choice__label {
+  min-width: 0;
+}
+
+.choice:has(.choice__input:checked) {
+  border-width: 2px;
+  padding: calc(var(--s2) - 1px) calc(var(--s3) - 1px);
+  font-weight: 600;
+}
+
+.choice--correct:has(.choice__input:checked) {
+  border-color: var(--ok);
+  background: var(--ok-tint);
+  color: var(--ok);
+}
+.choice--incorrect:has(.choice__input:checked) {
+  border-color: var(--flag);
+  background: var(--flag-tint);
+  color: var(--flag);
+}
+.choice--unsure:has(.choice__input:checked) {
+  border-color: var(--unsure);
+  background: var(--unsure-tint);
+  color: var(--unsure);
+}
+
+.choice:has(.choice__input:focus-visible) {
+  outline: 3px solid var(--line-focus);
+  outline-offset: 2px;
+}
+
+.note {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--disclose) var(--ease-out);
+}
+
+.note[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.note__inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.note__spacer {
+  padding-top: var(--s4);
+  margin-top: var(--s4);
+  border-top: 1px solid var(--line);
+}
+
+.progress {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--s4) var(--s5);
+  margin-bottom: var(--s5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  flex-wrap: wrap;
+  box-shadow: 0 1px 2px rgba(16, 24, 32, 0.04), 0 6px 16px rgba(16, 24, 32, 0.06);
+}
+
+.progress__count {
+  font-size: var(--size-md);
+  font-weight: 600;
+}
+
+.progress__remaining {
+  font-size: var(--size-sm);
+  color: var(--ink-2);
+}
+
+.progress__track {
+  flex: 1 1 12rem;
+  height: 6px;
+  min-width: 8rem;
+  background: var(--ground-sunken);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress__fill {
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 200ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress__fill {
+    transition: none;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: var(--s3);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: var(--s6);
+}
+
+.draft__body {
+  font-size: var(--size-lg);
+  line-height: var(--leading-prose);
+  max-width: var(--measure);
+}
+
+.draft__sentence {
+  padding: 2px 0;
+}
+
+.draft__sentence--changed {
+  background: #fff7e6;
+  box-shadow: 0 0 0 3px #fff7e6;
+  border-bottom: 2px solid #d9a441;
+}
+
+.changeList {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--s4);
+  margin-top: var(--s5);
+}
+
+.change {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--s4);
+  background: var(--surface);
+}
+
+.change__label {
+  font-size: var(--size-sm);
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-bottom: var(--s2);
+}
+
+.change__was,
+.change__now {
+  font-size: var(--size-md);
+  line-height: var(--leading-normal);
+  padding: var(--s3);
+  border-radius: var(--radius-sm);
+}
+
+.change__was {
+  background: var(--ground);
+  color: var(--ink-2);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-strong);
+  text-decoration-thickness: 1px;
+}
+
+.change__now {
+  background: var(--ok-tint);
+  border: 1px solid var(--ok-line);
+  margin-top: var(--s2);
+}
+
+.change__removed {
+  margin-top: var(--s2);
+  padding: var(--s3);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--line-strong);
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+.change__kept {
+  font-size: var(--size-md);
+  line-height: var(--leading-normal);
+  padding: var(--s3);
+  border-radius: var(--radius-sm);
+  background: var(--ground);
+}
+
+.change__note {
+  margin-top: var(--s3);
+  font-size: var(--size-sm);
+  color: var(--ink-2);
+}
+
+.change__note q {
+  color: var(--ink);
+  font-style: italic;
+}

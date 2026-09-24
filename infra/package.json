@@ -1,0 +1,9 @@
+{
+  "name": "awsagentinterviewportal-infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CDK command line for the patient summary-verification portal. The stacks themselves are Python, in portal/.",
+  "devDependencies": {
+    "aws-cdk": "^2.267.0"
+  }
+}

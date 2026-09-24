@@ -1,0 +1,12 @@
+{
+  "envName": "dev",
+  "region": "",
+  "stackPrefix": "PortalDev",
+  "allowedOrigins": [
+    "http://localhost:5173"
+  ],
+  "sesFromAddress": "",
+  "manageSesIdentity": true,
+  "kmsKeyAlias": "alias/portal-dev-summaries",
+  "studyTeamAddress": ""
+}

@@ -1,0 +1,75 @@
+:root {
+
+  --surface: #ffffff;
+  --ground: #f4f6f8;
+  --ground-sunken: #eceff3;
+
+  --ink: #1a1d21;
+  --ink-2: #4a5259;
+  --ink-3: #646d76;
+  --ink-on-primary: #ffffff;
+
+  --line: #d5dae0;
+  --line-strong: #aab3bd;
+  --line-focus: #12558c;
+
+  --primary: #12558c;
+  --primary-hover: #0e4471;
+  --primary-active: #0a3459;
+  --primary-tint: #eef4f9;
+
+  --flag: #b3261e;
+  --flag-hover: #8f1e18;
+  --flag-tint: #fdf3f2;
+  --flag-line: #e8b4b0;
+
+  --ok: #1a6b3c;
+  --ok-tint: #f0f7f2;
+  --ok-line: #b3d4be;
+
+  --unsure: #7a5a12;
+  --unsure-tint: #fdf7ea;
+  --unsure-line: #e0cea1;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  --size-xs: 0.8125rem;
+  --size-sm: 0.9375rem;
+  --size-md: 1.0625rem;
+  --size-lg: 1.1875rem;
+  --size-xl: 1.5rem;
+  --size-2xl: 1.875rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-prose: 1.65;
+
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 0.75rem;
+  --s4: 1rem;
+  --s5: 1.5rem;
+  --s6: 2rem;
+  --s7: 3rem;
+  --s8: 4rem;
+
+  --radius: 6px;
+  --radius-sm: 4px;
+  --control-min: 44px;
+
+  --lift: 0 2px 4px rgba(16, 24, 32, 0.08), 0 12px 32px rgba(16, 24, 32, 0.18);
+
+  --measure: 68ch;
+}
+
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --disclose: 160ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --disclose: 0ms;
+  }
+}

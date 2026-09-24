@@ -1,0 +1,10 @@
+{
+  "envName": "prod",
+  "region": "",
+  "stackPrefix": "PortalProd",
+  "allowedOrigins": [],
+  "sesFromAddress": "",
+  "manageSesIdentity": false,
+  "kmsKeyAlias": "alias/portal-prod-summaries",
+  "studyTeamAddress": ""
+}

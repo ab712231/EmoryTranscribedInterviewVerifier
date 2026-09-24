@@ -1,0 +1,44 @@
+.policy {
+  max-width: var(--measure);
+  line-height: var(--leading-prose);
+}
+
+.policy__section + .policy__section {
+  margin-top: var(--s6);
+}
+
+.policy__heading {
+  font-size: var(--size-md);
+  font-weight: 650;
+  letter-spacing: -0.006em;
+  margin-bottom: var(--s3);
+}
+
+.policy p + p {
+  margin-top: var(--s3);
+}
+
+.policy__list {
+
+  list-style: disc;
+  padding-left: 1.15em;
+  margin-top: var(--s3);
+}
+
+.policy__list li + li {
+  margin-top: var(--s2);
+}
+
+.policy__list li {
+  padding-left: 0.15em;
+}
+
+.policy__back {
+  margin-top: var(--s5);
+}
+
+@media (max-width: 40rem) {
+  .policy__section + .policy__section {
+    margin-top: var(--s5);
+  }
+}

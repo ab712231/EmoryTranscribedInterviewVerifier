@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               img-src 'self' data:;
+               font-src 'self';
+               connect-src %VITE_API_BASE_URL% https://cognito-idp.%VITE_COGNITO_REGION%.amazonaws.com;
+               form-action 'none';
+               frame-ancestors 'none';
+               base-uri 'none'"
+    />
+
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#12558c" />
+
+    <title>Check your interview summary</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="max-width: 34rem; margin: 3rem auto; padding: 0 1.5rem; font-family: system-ui, sans-serif; line-height: 1.6">
+        <h1 style="font-size: 1.5rem">JavaScript is required</h1>
+        <p>
+          This page needs JavaScript to show your interview summary. Please turn
+          it on and reload, or contact the study team for help.
+        </p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
