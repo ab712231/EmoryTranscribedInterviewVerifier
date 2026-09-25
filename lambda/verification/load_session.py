@@ -26,7 +26,11 @@ def lambda_handler(event, context=None):
     saved = session_store.load(_s3, BUCKET, patient_id, interview_id)
     if saved is None:
         saved = session_store.new_session(patient_id, interview_id)
-        session_store.save(_s3, BUCKET, saved)
+        try:
+            session_store.save(_s3, BUCKET, saved)
+        except session_store.Conflict:
+            # Another tab opened it first; use theirs.
+            saved = session_store.load(_s3, BUCKET, patient_id, interview_id)
 
     merged = session_store.merge_verdicts(statements, saved)
 

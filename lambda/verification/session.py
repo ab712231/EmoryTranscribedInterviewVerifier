@@ -13,6 +13,13 @@ SUBMITTED = "submitted"
 
 VERDICTS = frozenset({"correct", "incorrect", "unsure"})
 
+ETAG = "_etag"
+CONFLICT_CODES = ("PreconditionFailed", "ConditionalRequestConflict")
+
+
+class Conflict(Exception):
+    """The session changed after it was loaded, so the save was refused."""
+
 
 def session_key(patient_id, interview_id):
     """One session per interview, so answers never carry over between interviews."""
@@ -43,17 +50,33 @@ def load(s3, bucket, patient_id, interview_id) -> dict | None:
         if err.response.get("Error", {}).get("Code") in ("NoSuchKey", "404"):
             return None
         raise
-    return json.loads(obj["Body"].read().decode("utf-8"))
+    session = json.loads(obj["Body"].read().decode("utf-8"))
+    session[ETAG] = obj.get("ETag")
+    return session
 
 
 def save(s3, bucket, session):
+    """Write the session only if nothing else has written it since it was loaded.
+
+    A session that was never loaded is written only if none exists yet. Raises
+    Conflict when either condition fails, so a stale copy never overwrites a newer one.
+    """
+    etag = session.pop(ETAG, None)
     session["updated_at"] = now()
-    s3.put_object(
-        Bucket=bucket,
-        Key=session_key(session["patient_id"], session["interview_id"]),
-        Body=json.dumps(session).encode("utf-8"),
-        ContentType="application/json",
-    )
+    condition = {"IfMatch": etag} if etag else {"IfNoneMatch": "*"}
+    try:
+        result = s3.put_object(
+            Bucket=bucket,
+            Key=session_key(session["patient_id"], session["interview_id"]),
+            Body=json.dumps(session).encode("utf-8"),
+            ContentType="application/json",
+            **condition,
+        )
+    except ClientError as err:
+        if err.response.get("Error", {}).get("Code") in CONFLICT_CODES:
+            raise Conflict from None
+        raise
+    session[ETAG] = result.get("ETag")
 
 
 def drafts_used(session):

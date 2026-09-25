@@ -12,6 +12,8 @@ _s3 = boto3.client("s3")
 
 MAX_NOTE_LENGTH = 2000
 
+SAVE_ATTEMPTS = 3
+
 
 def _invalid(message):
     return api.response(400, {"message": message})
@@ -74,31 +76,42 @@ def lambda_handler(event, context=None):
 
     statements = split_statements(summary)
 
-    saved = session_store.load(
-        _s3, BUCKET, patient_id, interview_id
-    ) or session_store.new_session(patient_id, interview_id)
-    if session_store.is_locked(saved):
+    # Another request may save between our load and save. Replaying these
+    # answers onto the fresh copy is always correct, so retry rather than fail.
+    for _ in range(SAVE_ATTEMPTS):
+        saved = session_store.load(
+            _s3, BUCKET, patient_id, interview_id
+        ) or session_store.new_session(patient_id, interview_id)
+        if session_store.is_locked(saved):
+            return api.response(
+                409, {"message": "This verification has been submitted and can no longer be changed."}
+            )
+
+        validated, reason = validate(body.get("verdicts"), len(statements))
+        if validated is None:
+            return _invalid(reason)
+
+        for entry in validated:
+            saved["verdicts"][str(entry["index"])] = {
+                "verdict": entry["verdict"],
+                "note": entry["note"],
+            }
+
+        if saved.get("status") == session_store.AWAITING_APPROVAL:
+            saved["status"] = session_store.IN_PROGRESS
+            saved["proposed_draft"] = None
+            for key in ("rewritten_count", "rewrites", "removed", "not_applied"):
+                saved.pop(key, None)
+
+        try:
+            session_store.save(_s3, BUCKET, saved)
+            break
+        except session_store.Conflict:
+            continue
+    else:
         return api.response(
-            409, {"message": "This verification has been submitted and can no longer be changed."}
+            503, {"message": "Your answer could not be saved just now. Please try again.", "retryable": True}
         )
-
-    validated, reason = validate(body.get("verdicts"), len(statements))
-    if validated is None:
-        return _invalid(reason)
-
-    for entry in validated:
-        saved["verdicts"][str(entry["index"])] = {
-            "verdict": entry["verdict"],
-            "note": entry["note"],
-        }
-
-    if saved.get("status") == session_store.AWAITING_APPROVAL:
-        saved["status"] = session_store.IN_PROGRESS
-        saved["proposed_draft"] = None
-        for key in ("rewritten_count", "rewrites", "removed", "not_applied"):
-            saved.pop(key, None)
-
-    session_store.save(_s3, BUCKET, saved)
 
     merged = session_store.merge_verdicts(statements, saved)
     return api.response(

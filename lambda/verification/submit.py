@@ -46,6 +46,13 @@ def notify(patient_id, key):
     )
 
 
+def changed_elsewhere():
+    return api.response(
+        409,
+        {"message": "Your answers changed in another window. Please check the corrected version again."},
+    )
+
+
 def lambda_handler(event, context=None):
     patient_id = api.get_patient_id(event)
     if not patient_id:
@@ -79,12 +86,14 @@ def lambda_handler(event, context=None):
         saved.pop("rewrites", None)
         saved.pop("removed", None)
         saved.pop("not_applied", None)
-        session_store.save(_s3, BUCKET, saved)
+        try:
+            session_store.save(_s3, BUCKET, saved)
+        except session_store.Conflict:
+            return changed_elsewhere()
         return api.response(
             200,
             {
                 "patientId": patient_id,
-            "interviewId": interview_id,
                 "interviewId": interview_id,
                 "status": saved["status"],
             },
@@ -101,7 +110,13 @@ def lambda_handler(event, context=None):
     saved["status"] = session_store.SUBMITTED
     saved["approved_summary_key"] = key
     saved["submitted_at"] = session_store.now()
-    session_store.save(_s3, BUCKET, saved)
+    try:
+        session_store.save(_s3, BUCKET, saved)
+    except session_store.Conflict:
+        # The draft this approval was for is no longer current; the approved
+        # copy must not outlive it as though it were the record.
+        _s3.delete_object(Bucket=BUCKET, Key=key)
+        return changed_elsewhere()
 
     try:
         notify(patient_id, key)

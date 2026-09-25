@@ -323,7 +323,13 @@ def lambda_handler(event, context=None):
     saved["not_applied"] = not_applied
     saved["draft_count"] = used + 1
     saved["status"] = session_store.AWAITING_APPROVAL
-    session_store.save(_s3, BUCKET, saved)
+    try:
+        session_store.save(_s3, BUCKET, saved)
+    except session_store.Conflict:
+        return api.response(
+            409,
+            {"message": "Your answers changed while the corrected version was being prepared. Please try again."},
+        )
 
     return api.response(
         200,

@@ -42,20 +42,10 @@ Both parts are validated, and a key failing either is ignored:
 - `interview_id`: a date as `YYYY-MM-DD`. For a second interview the same day,
   append `-2`, giving `2026-03-04-2`.
 
-The file is the summary as plain prose, UTF-8. No JSON, no header, no metadata.
-It is split into sentences at sentence endings and line breaks, so anything on
-its own line becomes its own item.
-
-Do not rewrite a summary once it is written. Replacing the file leaves any
-answers the participant has already given attached to the old sentences.
-
-
 ## Before you start
 
 - An AWS account covered by a BAA.
 - Git, Node.js 20 or newer, Python 3.11 or newer, and the AWS CLI.
-- From the study team, needed only when going live: the data retention period
-  and a contact address for participants.
 
 Check what is installed. Each should print a version:
 
@@ -89,9 +79,6 @@ inside it. Move between them with `cd`:
 
 ## Get it running, with the website on your machine
 
-This is the real system, with the website served from your machine instead of a
-public address. After step 7 everything is set up and you can sign in.
-
 ### 1. Download the code and install what it needs
 
 Open PowerShell and go to wherever you keep projects, for example:
@@ -124,10 +111,6 @@ or two, and warnings are normal.
 
 ### 2. Sign in to the Emory account
 
-Your AWS user needs administrator access to the account, because deploying
-creates roles, a user pool, a bucket, an encryption key and email settings. If
-you do not have it, ask whoever manages Emory's AWS accounts.
-
 If the AWS CLI has never been signed in on this computer, set it up once, from
 any folder. If you sign in to AWS through an Emory sign-in page:
 
@@ -154,9 +137,7 @@ a command later says your sign-in has expired, run `aws sso login`.
 
 ### 3. Configure it
 
-This first deployment is configured by `infra/config/dev.json`. Open it in
-Notepad. Three values are blank, and step 4 refuses to deploy until you type
-them in. Leave the rest as it is:
+This first deployment is configured by `infra/config/dev.json`.
 
 - `region`: the AWS region to deploy into, written as a code like `us-east-1`.
   It must offer Claude Haiku 4.5 in Bedrock; `us-east-1` and `us-west-2` do.
@@ -250,13 +231,6 @@ character. It is case sensitive: `emory-0042` is not `EMORY-0042`.
 Each email address may appear once, and each `patient_id` once. Two people
 cannot share an inbox, because the address is how someone signs in.
 
-If the study already keeps this list in a spreadsheet, export that instead of
-retyping it. Extra columns, capitalised headings, and trailing blank rows are
-all ignored, so it usually works unedited as long as two columns are named
-`patient_id` and `email`.
-
-`roster.csv` stays on your machine and is gitignored.
-
 Check it. From the repository root:
 
     python scripts/provision_users/provision.py --env dev --roster roster.csv --dry-run
@@ -293,15 +267,6 @@ The interview should be listed under its `patient_id` and date, as
 `not started`. If it says `not enrolled`, its `patient_id` does not match
 `roster.csv` exactly. If it is missing, or the ID or date is not what you
 expect, fix that before going further.
-
-If the pipeline is not ready yet, put one summary in yourself to carry on. Write
-a few sentences of summary text into `summary.txt` in the repository root, then,
-from the repository root:
-
-    python scripts/summaries/put_summary.py --env dev --patient-id EMORY-0042 --interview-id 2026-03-04 --file summary.txt
-
-It checks the ID and date the same way the portal does, and refuses to replace a
-summary that already exists. `summary.txt` is gitignored.
 
 ### 7. Run the website and sign in
 
