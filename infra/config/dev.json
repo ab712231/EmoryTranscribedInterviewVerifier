@@ -1,12 +1,12 @@
 {
   "envName": "dev",
-  "region": "",
+  "region": "us-west-2",
   "stackPrefix": "PortalDev",
   "allowedOrigins": [
     "http://localhost:5173"
   ],
-  "sesFromAddress": "",
+  "sesFromAddress": "aarav.balaji@gmail.com",
   "manageSesIdentity": true,
   "kmsKeyAlias": "alias/portal-dev-summaries",
-  "studyTeamAddress": ""
+  "studyTeamAddress": "aarav.balaji@gmail.com"
 }

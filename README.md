@@ -1,12 +1,5 @@
 # Patient summary verification portal
 
-A website where a research participant reads the AI-written summary of their
-interview, marks each sentence right or wrong, and approves a corrected version.
-What they approve is saved as the record.
-
-Putting the website on a public address is the one piece nobody has decided on.
-
-
 ## How it works
 
 1. The summary pipeline writes a file to

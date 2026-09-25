@@ -115,14 +115,44 @@ def asks_for_removal(reply):
     return reply.strip().startswith(REMOVE)
 
 
+SMALL_NUMBERS = (
+    "one two three four five six seven eight nine ten eleven twelve thirteen "
+    "fourteen fifteen sixteen seventeen eighteen nineteen"
+).split()
+TENS = "twenty thirty forty fifty sixty seventy eighty ninety".split()
+
+DIGITS = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?")
+
+
 def numbers_in(text):
-    return set(re.findall(r"\d+(?:\.\d+)?", text))
+    """Every number in the text by value, so "04", "4" and "four" are the same number.
+
+    A lone "one" is left out: it is far more often "one of their sons" than a count.
+    """
+    found = {float(match.replace(",", "")) for match in DIGITS.findall(text)}
+
+    words = re.findall(r"[a-z]+", text.lower())
+    for position, word in enumerate(words):
+        if word in TENS:
+            value = 20 + 10 * TENS.index(word)
+            following = words[position + 1] if position + 1 < len(words) else ""
+            if following in SMALL_NUMBERS[:9]:
+                value += SMALL_NUMBERS.index(following) + 1
+            found.add(float(value))
+        elif word in SMALL_NUMBERS[1:]:
+            previous = words[position - 1] if position > 0 else ""
+            if not (previous in TENS and word in SMALL_NUMBERS[:9]):
+                found.add(float(SMALL_NUMBERS.index(word) + 1))
+    return found
 
 
 def keeps_numbers(original, revised, note):
-    """False when the rewrite loses a number, like a dose, that the note neither mentioned nor replaced."""
-    lost = numbers_in(original) - numbers_in(revised) - numbers_in(note)
-    replacements = (numbers_in(note) & numbers_in(revised)) - numbers_in(original)
+    """False when the rewrite adds a number from nowhere, or loses one, like a dose, that the note neither mentioned nor replaced."""
+    before, after, noted = numbers_in(original), numbers_in(revised), numbers_in(note)
+    if after - before - noted:
+        return False
+    lost = before - after - noted
+    replacements = (noted & after) - before
     return len(lost) <= len(replacements)
 
 
